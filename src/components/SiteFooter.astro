@@ -40,64 +40,72 @@ import { LIVE_STREAM_URL, stationInfo } from "../data/site";
           </div>
         </div>
 
-        <nav class="footer-nav" aria-label="Footer">
-          <a href="/">Home</a>
-          <a href="/shows">Shows</a>
-          <a href="/schedule">Schedule</a>
-          <a href="/news">News</a>
-          <a href="/about">About</a>
-          <a href="/contact">Contact</a>
-        </nav>
+        <div class="footer-meta-bottom">
+          <div class="footer-meta-block">
+            <span class="footer-meta-label">Quick links</span>
+            <nav class="footer-nav" aria-label="Footer">
+              <a href="/">Home</a>
+              <a href="/shows">Shows</a>
+              <a href="/schedule">Schedule</a>
+              <a href="/news">News</a>
+              <a href="/about">About</a>
+              <a href="/contact">Contact</a>
+            </nav>
+          </div>
 
-        <div class="footer-socials" aria-label="Connect with Byta FM">
-          <a
-            class="footer-social-link"
-            href={stationInfo.whatsappUrl}
-            target="_blank"
-            rel="noreferrer"
-            aria-label="Chat with Byta FM on WhatsApp"
-            title="WhatsApp"
-          >
-            <svg viewBox="0 0 24 24" aria-hidden="true">
-              <path fill="currentColor" d="M19.1 4.9A9.84 9.84 0 0 0 12.05 2C6.58 2 2.13 6.45 2.13 11.92c0 1.75.46 3.46 1.33 4.97L2 22l5.27-1.38a9.84 9.84 0 0 0 4.75 1.21h.01c5.47 0 9.92-4.45 9.92-9.92A9.83 9.83 0 0 0 19.1 4.9Zm-7.08 15.26h-.01a8.2 8.2 0 0 1-4.18-1.14l-.3-.18-3.13.82.84-3.05-.2-.31a8.2 8.2 0 0 1-1.27-4.38c0-4.52 3.68-8.2 8.21-8.2a8.2 8.2 0 0 1 5.8 2.4 8.15 8.15 0 0 1 2.4 5.8c0 4.52-3.68 8.2-8.16 8.24Zm4.5-6.15c-.25-.13-1.47-.72-1.7-.8-.23-.08-.4-.13-.57.13-.17.25-.65.8-.8.96-.15.17-.3.19-.55.07-.25-.13-1.07-.39-2.04-1.25-.75-.67-1.26-1.5-1.41-1.75-.15-.25-.02-.38.11-.51.12-.12.25-.3.38-.44.13-.15.17-.25.25-.42.08-.17.04-.32-.02-.44-.07-.13-.57-1.37-.78-1.87-.2-.49-.41-.42-.57-.43h-.49c-.17 0-.44.06-.67.32-.23.25-.88.86-.88 2.1 0 1.24.9 2.44 1.03 2.61.13.17 1.76 2.68 4.27 3.76.6.26 1.07.42 1.44.53.6.19 1.15.16 1.59.1.48-.07 1.47-.6 1.67-1.18.21-.58.21-1.07.15-1.18-.06-.1-.23-.16-.48-.29Z"/>
-            </svg>
-            <span class="visually-hidden">WhatsApp</span>
-          </a>
-          <a
-            class="footer-social-link"
-            href={`tel:${stationInfo.phoneIntl}`}
-            aria-label={`Call ${stationInfo.name}`}
-            title="Call the studio"
-          >
-            <svg viewBox="0 0 24 24" aria-hidden="true">
-              <path fill="currentColor" d="M6.62 10.79a15.72 15.72 0 0 0 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.56 0 1 .44 1 1V20a1 1 0 0 1-1 1C10.07 21 3 13.93 3 5a1 1 0 0 1 1-1h3.5c.56 0 1 .44 1 1 0 1.24.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2Z"/>
-            </svg>
-            <span class="visually-hidden">Call</span>
-          </a>
-          <a
-            class="footer-social-link"
-            href={`mailto:${stationInfo.email}`}
-            aria-label={`Email ${stationInfo.name}`}
-            title="Email the studio"
-          >
-            <svg viewBox="0 0 24 24" aria-hidden="true">
-              <path fill="currentColor" d="M20 4H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2Zm0 4.24-7.38 4.92a1 1 0 0 1-1.24 0L4 8.24V6l8 5.33L20 6v2.24Z"/>
-            </svg>
-            <span class="visually-hidden">Email</span>
-          </a>
-          <a
-            class="footer-social-link"
-            href={LIVE_STREAM_URL}
-            target="_blank"
-            rel="noreferrer"
-            aria-label="Open the Byta FM live stream"
-            title="Live stream"
-          >
-            <svg viewBox="0 0 24 24" aria-hidden="true">
-              <path fill="currentColor" d="M4 16h2.5a7 7 0 0 1 0-8H4a9 9 0 0 0 0 8Zm13.5-8a7 7 0 0 1 0 8H20a9 9 0 0 0 0-8h-2.5ZM8.86 13.14 14 16.5a1 1 0 0 0 1.54-.84V8.34A1 1 0 0 0 14 7.5l-5.14 3.36a1 1 0 0 0 0 1.68Z"/>
-            </svg>
-            <span class="visually-hidden">Live stream</span>
-          </a>
+          <div class="footer-meta-block">
+            <span class="footer-meta-label">Stay connected</span>
+            <div class="footer-socials" aria-label="Connect with Byta FM">
+              <a
+                class="footer-social-link"
+                href={stationInfo.whatsappUrl}
+                target="_blank"
+                rel="noreferrer"
+                aria-label="Chat with Byta FM on WhatsApp"
+                title="WhatsApp"
+              >
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path fill="currentColor" d="M19.1 4.9A9.84 9.84 0 0 0 12.05 2C6.58 2 2.13 6.45 2.13 11.92c0 1.75.46 3.46 1.33 4.97L2 22l5.27-1.38a9.84 9.84 0 0 0 4.75 1.21h.01c5.47 0 9.92-4.45 9.92-9.92A9.83 9.83 0 0 0 19.1 4.9Zm-7.08 15.26h-.01a8.2 8.2 0 0 1-4.18-1.14l-.3-.18-3.13.82.84-3.05-.2-.31a8.2 8.2 0 0 1-1.27-4.38c0-4.52 3.68-8.2 8.21-8.2a8.2 8.2 0 0 1 5.8 2.4 8.15 8.15 0 0 1 2.4 5.8c0 4.52-3.68 8.2-8.16 8.24Zm4.5-6.15c-.25-.13-1.47-.72-1.7-.8-.23-.08-.4-.13-.57.13-.17.25-.65.8-.8.96-.15.17-.3.19-.55.07-.25-.13-1.07-.39-2.04-1.25-.75-.67-1.26-1.5-1.41-1.75-.15-.25-.02-.38.11-.51.12-.12.25-.3.38-.44.13-.15.17-.25.25-.42.08-.17.04-.32-.02-.44-.07-.13-.57-1.37-.78-1.87-.2-.49-.41-.42-.57-.43h-.49c-.17 0-.44.06-.67.32-.23.25-.88.86-.88 2.1 0 1.24.9 2.44 1.03 2.61.13.17 1.76 2.68 4.27 3.76.6.26 1.07.42 1.44.53.6.19 1.15.16 1.59.1.48-.07 1.47-.6 1.67-1.18.21-.58.21-1.07.15-1.18-.06-.1-.23-.16-.48-.29Z"/>
+                </svg>
+                <span class="visually-hidden">WhatsApp</span>
+              </a>
+              <a
+                class="footer-social-link"
+                href={`tel:${stationInfo.phoneIntl}`}
+                aria-label={`Call ${stationInfo.name}`}
+                title="Call the studio"
+              >
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path fill="currentColor" d="M6.62 10.79a15.72 15.72 0 0 0 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.56 0 1 .44 1 1V20a1 1 0 0 1-1 1C10.07 21 3 13.93 3 5a1 1 0 0 1 1-1h3.5c.56 0 1 .44 1 1 0 1.24.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2Z"/>
+                </svg>
+                <span class="visually-hidden">Call</span>
+              </a>
+              <a
+                class="footer-social-link"
+                href={`mailto:${stationInfo.email}`}
+                aria-label={`Email ${stationInfo.name}`}
+                title="Email the studio"
+              >
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path fill="currentColor" d="M20 4H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2Zm0 4.24-7.38 4.92a1 1 0 0 1-1.24 0L4 8.24V6l8 5.33L20 6v2.24Z"/>
+                </svg>
+                <span class="visually-hidden">Email</span>
+              </a>
+              <a
+                class="footer-social-link"
+                href={LIVE_STREAM_URL}
+                target="_blank"
+                rel="noreferrer"
+                aria-label="Open the Byta FM live stream"
+                title="Live stream"
+              >
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path fill="currentColor" d="M4 16h2.5a7 7 0 0 1 0-8H4a9 9 0 0 0 0 8Zm13.5-8a7 7 0 0 1 0 8H20a9 9 0 0 0 0-8h-2.5ZM8.86 13.14 14 16.5a1 1 0 0 0 1.54-.84V8.34A1 1 0 0 0 14 7.5l-5.14 3.36a1 1 0 0 0 0 1.68Z"/>
+                </svg>
+                <span class="visually-hidden">Live stream</span>
+              </a>
+            </div>
+          </div>
         </div>
 
         <div class="footer-signoff">
