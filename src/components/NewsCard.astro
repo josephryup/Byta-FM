@@ -1,0 +1,22 @@
+---
+import type { NewsPost } from "../data/site";
+
+interface Props {
+  post: NewsPost;
+}
+
+const { post } = Astro.props;
+---
+
+<article class="news-card">
+  <div class="news-visual" data-category={post.category}>
+    <div class="visual-copy">
+      <span class="visual-tag">{post.category}</span>
+      <strong>{post.date}</strong>
+    </div>
+  </div>
+  <div class="card-body">
+    <p class="news-card-title">{post.title}</p>
+    <p>{post.summary}</p>
+  </div>
+</article>

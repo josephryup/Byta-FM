@@ -1,0 +1,135 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import ShowCard from "../components/ShowCard.astro";
+import { shows, stationInfo } from "../data/site";
+
+const breadcrumbSchema = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  itemListElement: [
+    {
+      "@type": "ListItem",
+      position: 1,
+      name: "Home",
+      item: new URL("/", Astro.url).href
+    },
+    {
+      "@type": "ListItem",
+      position: 2,
+      name: "Shows",
+      item: Astro.url.href
+    }
+  ]
+};
+---
+
+<BaseLayout
+  title="Byta FM Shows and Presenters | 90.3 FM Choma & 100.3 FM Mazabuka"
+  description="Explore Byta FM shows, presenters, and radio programmes on 90.3 FM in Choma and 100.3 FM in Mazabuka, including breakfast, agriculture, health, news, sports, gospel, and music."
+  activePath="/shows"
+  bodyClass="light-site"
+  structuredData={breadcrumbSchema}
+>
+  <section class="page-hero">
+    <div class="container page-shell">
+      <div class="page-copy">
+        <div class="eyebrow">
+          <span class="pulse-dot"></span>
+          Byta FM programmes
+        </div>
+        <h1 class="page-title">Byta FM shows and presenters for <span>Southern Province</span>.</h1>
+        <p>
+          {`See the radio programmes people tune in for across ${stationInfo.primaryLocation}, ${stationInfo.secondaryLocation}, and nearby communities.`}
+          {" "}From breakfast radio and current affairs to agriculture, health, gospel, sports,
+          and music, this page gives listeners and advertisers a clear picture of what Byta FM
+          broadcasts each week.
+        </p>
+      </div>
+      <aside class="page-aside page-meta">
+        <strong>What listeners will find</strong>
+        <div class="meta-list">
+          <div>
+            <span>Where to tune in</span>
+            <strong>{stationInfo.primaryFrequency} in {stationInfo.primaryLocation} and {stationInfo.secondaryFrequency} in {stationInfo.secondaryLocation}.</strong>
+          </div>
+          <div>
+            <span>Core content</span>
+            <strong>Agriculture, health, current affairs, community talk, sports, gospel, and music.</strong>
+          </div>
+          <div>
+            <span>How to join in</span>
+            <strong>Requests, dedications, call-ins, WhatsApp messages, and community announcements.</strong>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <section class="section section-tight">
+    <div class="container">
+      <div class="section-head">
+        <div>
+          <p class="section-kicker">Featured lineup</p>
+          <h2>Popular programmes heard across Choma and <span>Mazabuka</span>.</h2>
+        </div>
+        <p>
+          The lineup is built around useful information and familiar entertainment: strong breakfast
+          radio, trusted daytime updates, practical agriculture and health content, community
+          discussion, and music programming that keeps the station warm throughout the day.
+        </p>
+      </div>
+      <div class="card-grid grid-two">
+        {shows.map((show) => <ShowCard show={show} detailed />)}
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="section-head">
+        <div>
+          <p class="section-kicker">Programme details</p>
+          <h2>Useful show information for listeners, partners, and <span>sponsors</span>.</h2>
+        </div>
+        <a class="section-link" href="/contact">Ask about sponsorship</a>
+      </div>
+      <div class="card-grid grid-two">
+        {
+          shows.map((show) => (
+            <article class="panel" id={show.id}>
+              <div class="show-meta">
+                <span class="meta-pill">{show.category}</span>
+                <span class="meta-pill">{show.schedule}</span>
+                <span class="meta-pill">{`Host: ${show.host}`}</span>
+              </div>
+              <h3 class="detail-heading">{show.title}</h3>
+              <p>{show.detail}</p>
+              <div class="pill-row">
+                <span>{show.cta}</span>
+                <span>Studio interaction</span>
+                <span>On-air sponsorship ready</span>
+              </div>
+            </article>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="listen-banner">
+        <p class="section-kicker">Need the full timing?</p>
+        <h3>Check the weekly Byta FM schedule before you tune in.</h3>
+        <p>
+          If you want exact airtimes for breakfast radio, current affairs, sports, gospel, or
+          music, the schedule page shows what is on today and what comes next across the full week.
+        </p>
+        <div class="hero-actions action-row-spaced">
+          <a class="button button-primary" href="/schedule">View weekly schedule</a>
+          <button class="button button-secondary" type="button" data-load-stream>Jump to live player</button>
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

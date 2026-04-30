@@ -1,0 +1,119 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import NewsCard from "../components/NewsCard.astro";
+import { newsPosts, stationInfo } from "../data/site";
+
+const featuredStory = newsPosts[0];
+const breadcrumbSchema = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  itemListElement: [
+    {
+      "@type": "ListItem",
+      position: 1,
+      name: "Home",
+      item: new URL("/", Astro.url).href
+    },
+    {
+      "@type": "ListItem",
+      position: 2,
+      name: "News",
+      item: Astro.url.href
+    }
+  ]
+};
+---
+
+<BaseLayout
+  title="Byta FM News, Updates, and Community Stories | Choma & Mazabuka"
+  description="Read Byta FM station updates, community stories, agriculture and health features, listener guides, and radio news from Choma, Mazabuka, and Southern Province."
+  activePath="/news"
+  bodyClass="light-site"
+  structuredData={breadcrumbSchema}
+>
+  <section class="page-hero">
+    <div class="container page-shell">
+      <div class="page-copy">
+        <div class="eyebrow">
+          <span class="pulse-dot"></span>
+          Station updates and community stories
+        </div>
+        <h1 class="page-title">Byta FM news, listener guides, and local <span>updates</span>.</h1>
+        <p>
+          This newsroom section gives Byta FM a space for station announcements, community notices,
+          agriculture and health explainers, advertising information, and listener-focused stories
+          that stay useful even after the live programme ends.
+        </p>
+      </div>
+      <aside class="page-aside page-meta">
+        <strong>Why this page matters</strong>
+        <div class="meta-list">
+          <div>
+            <span>Station updates</span>
+            <strong>Publish schedule changes, special broadcasts, campaigns, and public notices.</strong>
+          </div>
+          <div>
+            <span>Search visibility</span>
+            <strong>Helpful articles about listening, contact, agriculture, and health create more discoverable pages.</strong>
+          </div>
+          <div>
+            <span>Listener trust</span>
+            <strong>Written updates support what listeners hear on {stationInfo.primaryFrequency} and {stationInfo.secondaryFrequency}.</strong>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <section class="section section-tight">
+    <div class="container">
+      <div class="news-feature" data-category={featuredStory.category}>
+        <div>
+          <div class="news-meta">
+            <span class="meta-pill">{featuredStory.category}</span>
+            <span class="meta-pill">{featuredStory.date}</span>
+          </div>
+          <h3>{featuredStory.title}</h3>
+          <p>{featuredStory.summary}</p>
+          <a class="button button-secondary" href="/contact">Ask the studio</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="section-head">
+        <div>
+          <p class="section-kicker">Latest posts</p>
+          <h2>What listeners search for before and after they <span>listen</span>.</h2>
+        </div>
+        <p>
+          The topics here focus on real Byta FM needs: how to listen live, how to contact the
+          station, what the programmes cover, and how the radio station serves communities in
+          Choma, Mazabuka, and across Southern Province.
+        </p>
+      </div>
+      <div class="card-grid grid-three">
+        {newsPosts.map((post) => <NewsCard post={post} />)}
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="listen-banner">
+        <p class="section-kicker">Need a community story covered?</p>
+        <h3>Send a tip, event notice, or station enquiry to Byta FM.</h3>
+        <p>
+          This section works best when it reflects what the station already does well on air:
+          practical information, relevant local stories, and clear ways for listeners to stay in touch.
+        </p>
+        <div class="hero-actions action-row-spaced">
+          <a class="button button-primary" href="/contact">Send a tip or story lead</a>
+          <button class="button button-secondary" type="button" data-load-stream>Return to live audio</button>
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

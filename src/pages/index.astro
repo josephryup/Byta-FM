@@ -1,0 +1,368 @@
+---
+import NewsCard from "../components/NewsCard.astro";
+import ScheduleBoard from "../components/ScheduleBoard.astro";
+import ShowCard from "../components/ShowCard.astro";
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { newsPosts, shows, stationInfo } from "../data/site";
+
+const featuredStory = newsPosts[0];
+const homeShows = shows.slice(0, 4);
+const homeNews = newsPosts.slice(1, 4);
+const homepageSchema = [
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    name: stationInfo.name,
+    alternateName: `${stationInfo.name} ${stationInfo.primaryFrequency}`,
+    description:
+      "Byta FM is a Southern Province commercial community radio station broadcasting agriculture, health, current affairs, music, sports, and community programmes from Choma and Mazabuka.",
+    url: Astro.url.href,
+    logo: new URL("/assets/logo.webp", Astro.url).href,
+    telephone: stationInfo.phoneIntl,
+    email: stationInfo.email,
+    address: {
+      "@type": "PostalAddress",
+      streetAddress: "Plot 1199/53, Mwanachingwala Rd",
+      addressLocality: "Choma",
+      addressCountry: "ZM"
+    }
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    name: `${stationInfo.name} live radio`,
+    url: Astro.url.href
+  }
+];
+---
+
+<BaseLayout
+  title="Byta FM 90.3 & 100.3 | Live Radio in Choma and Mazabuka"
+  description="Listen to Byta FM live online or on 90.3 FM in Choma and 100.3 FM in Mazabuka. Explore schedules, shows, news, agriculture, health, and community programming from Southern Province."
+  activePath="/"
+  bodyClass="home-page"
+  structuredData={homepageSchema}
+>
+  <section class="hero">
+    <div class="container hero-grid">
+      <div class="hero-copy">
+        <div class="eyebrow">
+          <span class="pulse-dot"></span>
+          Southern Province's leading community station
+        </div>
+        <svg class="signal-lines" viewBox="0 0 220 92" aria-hidden="true">
+          <path class="signal-wave signal-wave-primary" d="M0 46 Q28 12 56 46 T112 46 T168 46 T224 46" stroke="#19c91a" stroke-width="2" fill="none"></path>
+          <path class="signal-wave signal-wave-secondary" d="M0 62 Q28 28 56 62 T112 62 T168 62 T224 62" stroke="#66ef66" stroke-width="1.3" fill="none"></path>
+          <path class="signal-wave signal-wave-metal" d="M0 30 Q28 -4 56 30 T112 30 T168 30 T224 30" stroke="#bfc4c9" stroke-width="1.1" fill="none"></path>
+        </svg>
+        <h1 class="hero-title">Your voice for Agriculture, Health, and <span>Community</span>.</h1>
+        <p>
+          Broadcasting from Choma and Mazabuka, Byta FM brings trusted news, local-language
+          programming, and everyday entertainment to audiences across the Southern Province.
+        </p>
+        <div class="hero-actions">
+          <button class="button button-primary" type="button" data-load-stream>Listen live</button>
+          <a class="button button-secondary" href="/schedule">Today's schedule</a>
+        </div>
+        <div class="hero-metrics">
+          <div class="metric-card">
+            <strong>50%</strong>
+            <span>Agriculture and health focus</span>
+          </div>
+          <div class="metric-card">
+            <strong>90.3</strong>
+            <span>Choma frequency</span>
+          </div>
+          <div class="metric-card">
+            <strong>100.3</strong>
+            <span>Mazabuka frequency</span>
+          </div>
+        </div>
+        <div class="community-strip">
+          <div>
+            <strong>Local languages</strong>
+            <span>Broadcasting in languages widely spoken across our catchment areas.</span>
+          </div>
+          <div>
+            <strong>Community-driven</strong>
+            <span>Content development heavily involves the communities we serve.</span>
+          </div>
+          <div>
+            <strong>Established 2015</strong>
+            <span>A trusted commercial station rooted in the Southern Province.</span>
+          </div>
+        </div>
+      </div>
+
+      <aside class="hero-sidecard station-card">
+        <div class="station-card-top">
+          <div class="station-emblem">
+            <img src="/assets/logo.webp" alt="Byta FM station logo" width="256" height="256" decoding="async" />
+          </div>
+          <div>
+            <p class="station-kicker">Byta FM at a glance</p>
+            <h2 class="station-title">Improving lives through relevant information.</h2>
+            <p class="station-copy">
+              We are a proudly Choma-based commercial radio station broadcasting across Choma,
+              Kalomo, Mazabuka, Kafue, Monze, and beyond, dedicated to the well-being of our audience.
+            </p>
+          </div>
+        </div>
+        <div class="station-freqs">
+          <div class="freq-card">
+            <span>Choma</span>
+            <strong>90.3 FM</strong>
+          </div>
+          <div class="freq-card">
+            <span>Mazabuka</span>
+            <strong>100.3 FM</strong>
+          </div>
+        </div>
+        <div class="on-air-strip">
+          <div class="on-air-copy">
+            <strong data-now-playing>Byta Breakfast</strong>
+            <span data-now-playing-sub>06:00 CAT | Headlines, market updates, weather, and shout-outs</span>
+          </div>
+          <div class="badge">
+            <span class="pulse-dot"></span>
+            Live
+          </div>
+        </div>
+        <div class="station-note-list">
+          <div class="station-note">
+            <span class="station-dot"></span>
+            <p>Call the studio for shout-outs, announcements, and dedications during any live show.</p>
+          </div>
+          <div class="station-note">
+            <span class="station-dot"></span>
+            <p>Browse our shows, check the weekly schedule, and listen live, all from one place.</p>
+          </div>
+        </div>
+        <div class="station-link-row">
+          <button class="button button-primary" type="button" data-load-stream>Open the stream</button>
+          <a class="button button-secondary" href="/shows">Meet the shows</a>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <section class="section section-tight" id="live-player">
+    <div class="container">
+      <div class="section-head">
+        <div>
+          <p class="section-kicker">Listen live</p>
+          <h2>Tune in from anywhere, <span>anytime</span>.</h2>
+        </div>
+        <p>
+          Stream Byta FM live while you browse our schedule, read the news, or check what is on next.
+          The player stays with you as you explore the site.
+        </p>
+      </div>
+
+      <div class="player-layout">
+        <div class="panel player-shell">
+          <div class="player-shell-head">
+            <div class="player-shell-copy">
+              <span class="player-shell-kicker">Live stream</span>
+              <div class="player-shell-row">
+                <div>
+                  <strong>Byta FM live player</strong>
+                  <p>Streaming live from Choma through the station's direct audio stream.</p>
+                </div>
+              </div>
+            </div>
+            <div class="player-actions">
+              <button class="button button-primary player-action-button" type="button" data-load-stream>Load stream</button>
+              <a class="button button-secondary player-action-button" href="#" target="_blank" rel="noreferrer" data-stream-link>Open direct stream</a>
+              <div class="inline-audio-player" data-inline-player hidden>
+                <div class="inline-audio-player-top">
+                  <button class="inline-audio-toggle" type="button" data-stream-primary aria-pressed="false">
+                    <span class="inline-audio-toggle-icon" aria-hidden="true"></span>
+                    <span data-stream-primary-label>Pause stream</span>
+                  </button>
+                  <div class="inline-audio-meta">
+                    <strong>Byta FM live</strong>
+                    <span data-stream-status>Live audio is ready to play.</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="player-glass">
+            <div class="player-label">
+              <strong data-now-playing>Byta Breakfast</strong>
+              <span data-now-playing-sub>06:00 CAT | Headlines, market updates, weather, and shout-outs</span>
+            </div>
+            <svg class="wave-meter" viewBox="0 0 132 36" aria-hidden="true">
+              <rect class="meter-bar meter-bar-1" x="0" y="14" width="8" height="8" rx="4" fill="#19c91a"></rect>
+              <rect class="meter-bar meter-bar-2" x="16" y="8" width="8" height="20" rx="4" fill="#bfc4c9" opacity="0.86"></rect>
+              <rect class="meter-bar meter-bar-3" x="32" y="4" width="8" height="28" rx="4" fill="#19c91a" opacity="0.72"></rect>
+              <rect class="meter-bar meter-bar-4" x="48" y="10" width="8" height="16" rx="4" fill="#bfc4c9" opacity="0.92"></rect>
+              <rect class="meter-bar meter-bar-5" x="64" y="2" width="8" height="32" rx="4" fill="#19c91a"></rect>
+              <rect class="meter-bar meter-bar-6" x="80" y="12" width="8" height="12" rx="4" fill="#bfc4c9" opacity="0.7"></rect>
+              <rect class="meter-bar meter-bar-7" x="96" y="6" width="8" height="24" rx="4" fill="#19c91a" opacity="0.82"></rect>
+              <rect class="meter-bar meter-bar-8" x="112" y="14" width="8" height="8" rx="4" fill="#bfc4c9" opacity="0.64"></rect>
+            </svg>
+          </div>
+
+          <div class="embed-frame" id="radio-shell">
+            <audio id="radio-audio" class="stream-audio" preload="none" playsinline></audio>
+            <div class="embed-placeholder" id="radio-placeholder">
+              <div class="placeholder-inner" aria-hidden="true"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="sidebar-stack">
+          <div class="sidebar-card">
+            <strong>Listen on the go</strong>
+            <p>
+              Byta FM is available on 90.3 FM in Choma, 100.3 FM in Mazabuka, and right here online.
+              Tune in however works best for you.
+            </p>
+          </div>
+          <div class="sidebar-card">
+            <strong>Get involved</strong>
+            <ul>
+              <li>Send shout-outs and dedications via WhatsApp during any live show</li>
+              <li>Call in for discussions, song requests, and community announcements</li>
+              <li>Share news tips and local event details with the station team</li>
+            </ul>
+            <div class="studio-chip">Studio WhatsApp | +260 96 681 1429</div>
+          </div>
+          <div class="sidebar-card">
+            <strong>Alternative stream</strong>
+            <p>
+              If playback stalls, use the direct stream link next to the player controls for
+              uninterrupted listening on any device.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="section-head">
+        <div>
+          <p class="section-kicker">Programming</p>
+          <h2>Meet our <span>presenters</span>.</h2>
+        </div>
+        <a class="section-link" href="/shows">Explore all shows</a>
+      </div>
+      <div class="card-grid grid-four" id="home-shows">
+        {homeShows.map((show) => <ShowCard show={show} />)}
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="section-head">
+        <div>
+          <p class="section-kicker">Weekly grid</p>
+          <h2>What is on now, and what comes <span>next</span>.</h2>
+        </div>
+        <p>
+          Check what is playing right now and plan your listening for the rest of the day.
+          All times are shown in Central Africa Time.
+        </p>
+      </div>
+      <ScheduleBoard mode="compact" />
+    </div>
+  </section>
+
+  <section class="section warm-section">
+    <div class="container">
+      <div class="section-head">
+        <div>
+          <p class="section-kicker">News and culture</p>
+          <h2>From the studio desk and across the <span>province</span>.</h2>
+        </div>
+        <a class="section-link" href="/news">Read the newsroom</a>
+      </div>
+      <div class="news-feature" data-category={featuredStory.category}>
+        <div>
+          <div class="news-meta">
+            <span class="meta-pill">{featuredStory.category}</span>
+            <span class="meta-pill">{featuredStory.date}</span>
+          </div>
+          <h3>{featuredStory.title}</h3>
+          <p>{featuredStory.summary}</p>
+          <a class="button button-secondary" href="/news">Explore news</a>
+        </div>
+      </div>
+      <div class="card-grid grid-three stack-top" id="home-news">
+        {homeNews.map((post) => <NewsCard post={post} />)}
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <article class="station-story-card">
+        <div class="station-story-media">
+          <div class="station-story-media-copy">
+            <span class="visual-tag">Partner with Byta FM</span>
+            <strong>Flexible radio solutions tailored for you.</strong>
+            <p>Corporate promotions, outside broadcasts, music production, and commercial support.</p>
+          </div>
+        </div>
+
+        <div class="station-story-content">
+          <div class="station-story-head">
+            <p class="section-kicker">About the station</p>
+            <h3>Programming that improves lives.</h3>
+            <p>
+              At Byta FM, the goal is simple: provide relevant information that improves the well-being
+              of the audience. Community voices help shape the content so the station stays rooted in
+              everyday life across the Southern Province.
+            </p>
+          </div>
+
+          <div class="station-story-points">
+            <div class="station-story-point">
+              <strong>Agriculture and health</strong>
+              <span>Core programming focuses on practical information that helps listeners make daily decisions.</span>
+            </div>
+            <div class="station-story-point">
+              <strong>Local language reach</strong>
+              <span>Broadcasts stay close to the people we serve by using familiar languages and lived context.</span>
+            </div>
+            <div class="station-story-point">
+              <strong>Community-built content</strong>
+              <span>News, documentaries, and local stories are shaped with direct audience involvement.</span>
+            </div>
+          </div>
+
+          <div class="pill-row station-story-tags">
+            <span>Agriculture</span>
+            <span>Health</span>
+            <span>Local languages</span>
+            <span>Zambian drama</span>
+            <span>Accountability</span>
+          </div>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="listen-banner">
+        <p class="section-kicker">Contact the studio</p>
+        <h3>Connect with Byta FM.</h3>
+        <p>
+          Reach out for promotions, live broadcast coverage, music production, or to connect with
+          presenters and the station team directly.
+        </p>
+        <div class="hero-actions action-row-spaced">
+          <a class="button button-primary" href="/contact">Contact the studio</a>
+          <a class="button button-secondary" href="/schedule">Browse full schedule</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

@@ -1,0 +1,211 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { stationInfo } from "../data/site";
+
+const organizationSchema = {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  name: stationInfo.name,
+  alternateName: `${stationInfo.name} ${stationInfo.primaryFrequency}`,
+  description:
+    "Byta FM is a Southern Province commercial community radio station broadcasting agriculture, health, current affairs, music, sports, and community programmes from Choma and Mazabuka.",
+  url: new URL("/", Astro.url).href,
+  logo: new URL("/assets/logo.webp", Astro.url).href,
+  telephone: stationInfo.phoneIntl,
+  email: stationInfo.email,
+  address: {
+    "@type": "PostalAddress",
+    streetAddress: "Plot 1199/53, Mwanachingwala Rd",
+    addressLocality: "Choma",
+    addressCountry: "ZM"
+  }
+};
+
+const breadcrumbSchema = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  itemListElement: [
+    {
+      "@type": "ListItem",
+      position: 1,
+      name: "Home",
+      item: new URL("/", Astro.url).href
+    },
+    {
+      "@type": "ListItem",
+      position: 2,
+      name: "About",
+      item: Astro.url.href
+    }
+  ]
+};
+---
+
+<BaseLayout
+  title="About Byta FM | Community Radio in Choma and Mazabuka"
+  description="Learn about Byta FM, a Southern Province commercial community radio station broadcasting on 90.3 FM in Choma and 100.3 FM in Mazabuka with agriculture, health, news, music, and community programming."
+  activePath="/about"
+  bodyClass="light-site"
+  structuredData={[organizationSchema, breadcrumbSchema]}
+>
+  <section class="page-hero">
+    <div class="container page-shell">
+      <div class="page-copy">
+        <div class="eyebrow">
+          <span class="pulse-dot"></span>
+          About the station
+        </div>
+        <h1 class="page-title">A community radio station built around useful <span>information</span>.</h1>
+        <p>
+          Byta FM is a Southern Province radio station serving listeners through relevant
+          information, live conversation, and familiar entertainment. From agriculture and health
+          to music, sports, and community announcements, the station is designed to stay close to
+          everyday life in {stationInfo.primaryLocation}, {stationInfo.secondaryLocation}, and surrounding areas.
+        </p>
+      </div>
+      <aside class="page-aside page-meta">
+        <strong>Station profile</strong>
+        <div class="meta-list">
+          <div>
+            <span>Broadcast identity</span>
+            <strong>Commercial community radio with a strong agriculture, health, and information focus.</strong>
+          </div>
+          <div>
+            <span>Coverage points</span>
+            <strong>{stationInfo.primaryFrequency} in {stationInfo.primaryLocation} and {stationInfo.secondaryFrequency} in {stationInfo.secondaryLocation}.</strong>
+          </div>
+          <div>
+            <span>Audience promise</span>
+            <strong>Useful, current, and closely connected to daily life in Southern Province.</strong>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <section class="section section-tight">
+    <div class="container stats-band">
+      <article class="stat-panel">
+        <strong>{stationInfo.established}</strong>
+        <span>Established with a mission to serve listeners through relevant information and dependable local radio.</span>
+      </article>
+      <article class="stat-panel">
+        <strong>2</strong>
+        <span>Primary FM frequencies connecting the station to listeners in {stationInfo.primaryLocation} and {stationInfo.secondaryLocation}.</span>
+      </article>
+      <article class="stat-panel">
+        <strong>90.3</strong>
+        <span>The station's Choma frequency and one of the most direct ways many listeners identify the brand.</span>
+      </article>
+      <article class="stat-panel">
+        <strong>100.3</strong>
+        <span>The Mazabuka frequency extending Byta FM's reach to another important audience centre.</span>
+      </article>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container story-grid">
+      <div class="story-copy">
+        <p class="section-kicker">Station narrative</p>
+        <h3>Programming that improves lives and keeps the community informed.</h3>
+        <p>
+          Byta FM exists to provide listeners with practical, understandable, and timely information.
+          Agriculture, health, local news, entertainment, and community participation are not side
+          topics here; they are the station's everyday role in households, markets, workplaces, and
+          public life across Southern Province.
+        </p>
+        <div class="pill-row">
+          <span>Agriculture</span>
+          <span>Health</span>
+          <span>Community</span>
+          <span>Current affairs</span>
+          <span>Entertainment</span>
+        </div>
+      </div>
+      <div class="story-photo">
+        <div class="feature-strip" data-category="Talk">
+          <div class="visual-copy">
+            <span class="visual-tag">Who the station serves</span>
+            <strong>Radio that stays close to markets, families, farms, schools, and the studio line.</strong>
+            <p>
+              Listeners use Byta FM for information, companionship, announcements, requests,
+              sports talk, and the kind of familiar voices that make local radio feel personal.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="section-head">
+        <div>
+          <p class="section-kicker">Values</p>
+          <h2>What Byta FM aims to deliver on air and <span>online</span>.</h2>
+        </div>
+      </div>
+      <div class="card-grid grid-three">
+        <article class="value-card">
+          <div class="contact-icon">A</div>
+          <strong>Relevance</strong>
+          <p>Programmes should answer the practical questions listeners face about health, farming, family life, work, and local events.</p>
+        </article>
+        <article class="value-card">
+          <div class="contact-icon">B</div>
+          <strong>Participation</strong>
+          <p>Listeners are part of the station through call-ins, WhatsApp messages, dedications, community announcements, and public discussion.</p>
+        </article>
+        <article class="value-card">
+          <div class="contact-icon">C</div>
+          <strong>Credibility</strong>
+          <p>News, current affairs, and advisory content should be clear, responsible, and easy to understand without losing local relevance.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="section-head">
+        <div>
+          <p class="section-kicker">Programming areas</p>
+          <h2>The key content areas listeners rely on every <span>week</span>.</h2>
+        </div>
+      </div>
+      <div class="card-grid grid-three">
+        <article class="team-card">
+          <div class="team-visual" data-category="Music">
+            <div class="visual-copy">
+              <span class="visual-tag">Entertainment</span>
+              <strong>Music and weekend energy</strong>
+            </div>
+          </div>
+          <strong>Music programming</strong>
+          <p>From daytime requests to evening listening and weekend mixes, music keeps the station familiar and welcoming.</p>
+        </article>
+        <article class="team-card">
+          <div class="team-visual" data-category="News">
+            <div class="visual-copy">
+              <span class="visual-tag">Information</span>
+              <strong>Agriculture, health, and current affairs</strong>
+            </div>
+          </div>
+          <strong>Useful daily information</strong>
+          <p>These programmes help households, farmers, traders, and workers follow issues that affect everyday life.</p>
+        </article>
+        <article class="team-card">
+          <div class="team-visual" data-category="Talk">
+            <div class="visual-copy">
+              <span class="visual-tag">Community</span>
+              <strong>Listener participation and public discussion</strong>
+            </div>
+          </div>
+          <strong>Audience connection</strong>
+          <p>Byta FM stays strongest when listeners can send messages, join discussions, and hear community concerns treated seriously.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

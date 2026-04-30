@@ -1,0 +1,30 @@
+---
+import type { Show } from "../data/site";
+
+interface Props {
+  show: Show;
+  detailed?: boolean;
+}
+
+const { show, detailed = false } = Astro.props;
+---
+
+<article class="show-card">
+  <div class="show-visual" data-tone={show.tone} data-category={show.category}>
+    <div class="visual-copy">
+      <span class="visual-tag">{show.category}</span>
+      <h3>{show.title}</h3>
+    </div>
+  </div>
+  <div class="card-body">
+    <div class="show-meta">
+      <span class="meta-pill">{show.schedule}</span>
+      <span class="meta-pill">{show.host}</span>
+    </div>
+    <p>{detailed ? show.detail : show.summary}</p>
+    <div class="card-actions">
+      <a href={`/shows#${show.id}`}>View show</a>
+      <span class="meta-pill">{show.cta}</span>
+    </div>
+  </div>
+</article>

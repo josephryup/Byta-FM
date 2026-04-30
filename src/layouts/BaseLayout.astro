@@ -1,0 +1,498 @@
+---
+import "../styles/global.css";
+import SiteFooter from "../components/SiteFooter.astro";
+import SiteHeader from "../components/SiteHeader.astro";
+import StickyPlayer from "../components/StickyPlayer.astro";
+import { LIVE_STREAM_URL, dayOrder, shortDays, weeklySchedule } from "../data/site";
+
+interface Props {
+  title: string;
+  description: string;
+  activePath: string;
+  bodyClass?: string;
+  structuredData?: Record<string, unknown> | Record<string, unknown>[];
+}
+
+const { title, description, activePath, bodyClass = "", structuredData } = Astro.props;
+const structuredDataItems = structuredData
+  ? Array.isArray(structuredData)
+    ? structuredData
+    : [structuredData]
+  : [];
+---
+
+<!DOCTYPE html>
+<html lang="en-ZM">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta name="theme-color" content="#0b120c" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="preload" href="/assets/logo.webp" as="image" type="image/webp" />
+    {
+      structuredDataItems.length > 0 && (
+        <script type="application/ld+json" set:html={JSON.stringify(structuredDataItems)} />
+      )
+    }
+  </head>
+  <body class={bodyClass}>
+    <SiteHeader activePath={activePath} />
+    <main>
+      <slot />
+    </main>
+    <SiteFooter />
+    <StickyPlayer />
+
+    <script
+      is:inline
+      define:vars={{ LIVE_STREAM_URL, weeklySchedule, dayOrder, shortDays }}
+      type="module"
+    >
+      /* ─── CAT timezone helpers ────────────────────────────── */
+
+      const CAT_TZ = "Africa/Lusaka";
+
+      /** Returns the current hour (0-23) in Central Africa Time. */
+      function getCATHour() {
+        const parts = new Intl.DateTimeFormat("en-GB", {
+          timeZone: CAT_TZ,
+          hour: "numeric",
+          hour12: false
+        }).formatToParts(new Date());
+        const hourPart = parts.find((p) => p.type === "hour");
+        return hourPart ? Number.parseInt(hourPart.value, 10) : new Date().getHours();
+      }
+
+      /** Returns the current day name (lowercase) in Central Africa Time. */
+      function getTodayName() {
+        const catDay = new Intl.DateTimeFormat("en-GB", {
+          timeZone: CAT_TZ,
+          weekday: "long"
+        }).format(new Date());
+        return catDay.toLowerCase();
+      }
+
+      /** Returns the index of the currently airing show within a list of schedule entries. */
+      function getLiveIndex(items) {
+        const hour = getCATHour();
+        const todayName = getTodayName();
+        const viewingToday = _activeScheduleDay === todayName;
+        const starts = items.map((item) => Number.parseInt(item.time.split(":")[0], 10));
+
+        if (!viewingToday) {
+          return -1;
+        }
+
+        for (let i = 0; i < starts.length; i += 1) {
+          const start = starts[i];
+          const next = starts[i + 1] ?? 24;
+          if (hour >= start && hour < next) {
+            return i;
+          }
+        }
+
+        return -1;
+      }
+
+      /* ─── State ──────────────────────────────────────────── */
+
+      let _activeScheduleDay = getTodayName();
+      let _lastShowTitle = "";
+
+      /* ─── Init ───────────────────────────────────────────── */
+
+      const init = () => {
+        setupNav();
+        renderSchedules();
+        setupListenButtons();
+        updateNowPlaying();
+        setupStickyPlayer();
+        startLiveClock();
+      };
+
+      /* ─── Live clock (60-second refresh) ─────────────────── */
+
+      function startLiveClock() {
+        setInterval(() => {
+          updateNowPlaying();
+          refreshScheduleHighlights();
+        }, 60_000);
+      }
+
+      /** Re-draw schedule boards in-place so the "is-live" row moves when the hour changes. */
+      function refreshScheduleHighlights() {
+        document.querySelectorAll("[data-schedule-root]").forEach((root) => {
+          const listHost = root.querySelector("[data-schedule-list]");
+          if (!listHost) {
+            return;
+          }
+
+          const compact = root.dataset.scheduleRoot === "compact";
+          const items = compact
+            ? weeklySchedule[_activeScheduleDay]?.slice(0, 5)
+            : weeklySchedule[_activeScheduleDay];
+
+          if (!items) {
+            return;
+          }
+
+          const liveIndex = getLiveIndex(items);
+          const rows = listHost.querySelectorAll(".schedule-row");
+
+          rows.forEach((row, index) => {
+            const isLive = index === liveIndex;
+            row.classList.toggle("is-live", isLive);
+            const catCell = row.querySelector(".schedule-category");
+            if (catCell) {
+              catCell.textContent = isLive ? "On air" : items[index]?.category ?? "";
+            }
+          });
+        });
+      }
+
+      /* ─── Navigation ─────────────────────────────────────── */
+
+      function setupNav() {
+        const toggle = document.querySelector("[data-nav-toggle]");
+        const nav = document.querySelector("[data-nav]");
+
+        if (!toggle || !nav) {
+          return;
+        }
+
+        toggle.addEventListener("click", () => {
+          const open = nav.classList.toggle("is-open");
+          toggle.setAttribute("aria-expanded", String(open));
+        });
+
+        nav.querySelectorAll("a").forEach((link) => {
+          link.addEventListener("click", () => {
+            nav.classList.remove("is-open");
+            toggle.setAttribute("aria-expanded", "false");
+          });
+        });
+      }
+
+      /* ─── Schedule rendering ─────────────────────────────── */
+
+      function renderSchedules() {
+        const todayName = getTodayName();
+
+        document.querySelectorAll("[data-schedule-root]").forEach((root) => {
+          const tabsHost = root.querySelector("[data-schedule-tabs]");
+          const listHost = root.querySelector("[data-schedule-list]");
+          const metaHost = root.querySelector("[data-schedule-meta]");
+          const compact = root.dataset.scheduleRoot === "compact";
+
+          if (!tabsHost || !listHost) {
+            return;
+          }
+
+          let activeDay = dayOrder.includes(todayName) ? todayName : "monday";
+          _activeScheduleDay = activeDay;
+
+          const draw = () => {
+            _activeScheduleDay = activeDay;
+
+            tabsHost.innerHTML = dayOrder
+              .map(
+                (day) => `
+                  <button class="schedule-tab${day === activeDay ? " is-active" : ""}${day === todayName ? " is-today" : ""}" type="button" data-day="${day}">
+                    ${shortDays[day]}${day === todayName ? '<span class="today-dot"></span>' : ""}
+                  </button>
+                `
+              )
+              .join("");
+
+            const items = compact ? weeklySchedule[activeDay].slice(0, 5) : weeklySchedule[activeDay];
+            const liveIndex = getLiveIndex(items);
+
+            listHost.innerHTML = items
+              .map(
+                (item, index) => `
+                  <article class="schedule-row${index === liveIndex ? " is-live" : ""}">
+                    <div class="schedule-time">${item.time}</div>
+                    <div class="schedule-show">
+                      <strong>${item.title}</strong>
+                      <span>${item.note}</span>
+                    </div>
+                    <div class="schedule-category">${index === liveIndex ? "On air" : item.category}</div>
+                  </article>
+                `
+              )
+              .join("");
+
+            if (metaHost) {
+              const dayLabel = activeDay === todayName ? `Today (${capitalize(activeDay)})` : capitalize(activeDay);
+              metaHost.textContent = `${dayLabel} programming | All times CAT`;
+            }
+          };
+
+          tabsHost.addEventListener("click", (event) => {
+            const button = event.target.closest("[data-day]");
+            if (!button || !(button instanceof HTMLButtonElement)) {
+              return;
+            }
+
+            const nextDay = button.dataset.day;
+            if (!nextDay || nextDay === activeDay) {
+              return;
+            }
+
+            activeDay = nextDay;
+            draw();
+          });
+
+          draw();
+        });
+      }
+
+      /* ─── Now-playing updates ────────────────────────────── */
+
+      function updateNowPlaying() {
+        const todayName = getTodayName();
+        const todaySchedule = weeklySchedule[todayName] || weeklySchedule.monday;
+        const liveIndex = getLiveIndex(todaySchedule);
+        const currentShow = liveIndex >= 0 ? todaySchedule[liveIndex] : todaySchedule[0];
+
+        if (!currentShow) {
+          return;
+        }
+
+        const labels = document.querySelectorAll("[data-now-playing]");
+        const sublabels = document.querySelectorAll("[data-now-playing-sub]");
+
+        labels.forEach((node) => {
+          node.textContent = currentShow.title;
+        });
+
+        sublabels.forEach((node) => {
+          node.textContent = `${currentShow.time} CAT | ${currentShow.note}`;
+        });
+
+        _lastShowTitle = currentShow.title;
+      }
+
+      /* ─── Listen / stream buttons ────────────────────────── */
+
+      function setupListenButtons() {
+        const playerSection = document.querySelector("#live-player");
+        const audio = document.querySelector("#radio-audio");
+        const shell = document.querySelector("#radio-shell");
+        const inlinePlayers = document.querySelectorAll("[data-inline-player]");
+        const primaryToggles = document.querySelectorAll("[data-stream-primary]");
+        const primaryLabels = document.querySelectorAll("[data-stream-primary-label]");
+        const statusLabels = document.querySelectorAll("[data-stream-status]");
+
+        const syncPlayerUi = () => {
+          if (!audio || !shell) {
+            return;
+          }
+
+          const hasStarted = Boolean(audio.src);
+          const isPlaying = !audio.paused && !audio.ended;
+          const isMuted = audio.muted || audio.volume === 0;
+
+          shell.classList.toggle("has-started", hasStarted);
+          shell.classList.toggle("is-playing", isPlaying);
+          shell.classList.toggle("is-muted", isMuted);
+
+          inlinePlayers.forEach((panel) => {
+            panel.hidden = !hasStarted;
+            panel.classList.toggle("is-playing", isPlaying);
+          });
+
+          primaryToggles.forEach((button) => {
+            button.classList.toggle("is-playing", isPlaying);
+            button.setAttribute("aria-pressed", String(isPlaying));
+            button.toggleAttribute("disabled", !hasStarted);
+          });
+
+          primaryLabels.forEach((label) => {
+            label.textContent = isPlaying ? "Pause stream" : "Play stream";
+          });
+
+          statusLabels.forEach((label) => {
+            if (!hasStarted) {
+              label.textContent = "Live audio will appear here after loading.";
+              return;
+            }
+
+            label.textContent = isPlaying
+              ? "Now playing live from Choma and Mazabuka."
+              : "Stream is ready. Tap play to resume listening.";
+          });
+        };
+
+        const playStream = async ({ scrollIntoView = false } = {}) => {
+          if (!audio || !shell) {
+            if (scrollIntoView && playerSection) {
+              playerSection.scrollIntoView({ behavior: "smooth", block: "start" });
+            }
+            return;
+          }
+
+          if (!audio.src) {
+            audio.src = LIVE_STREAM_URL;
+            audio.load();
+          }
+
+          shell.classList.add("has-started");
+          syncPlayerUi();
+          shell.classList.add("is-buffering");
+
+          try {
+            await audio.play();
+            if (scrollIntoView && playerSection) {
+              playerSection.scrollIntoView({ behavior: "smooth", block: "start" });
+            }
+          } catch (error) {
+            shell.classList.remove("is-buffering");
+            syncPlayerUi();
+          }
+        };
+
+        if (audio) {
+          audio.volume = 1;
+
+          audio.addEventListener("playing", () => {
+            shell?.classList.remove("is-buffering");
+            syncPlayerUi();
+          });
+
+          audio.addEventListener("pause", () => {
+            shell?.classList.remove("is-buffering");
+            syncPlayerUi();
+          });
+
+          audio.addEventListener("waiting", () => {
+            if (!audio.paused) {
+              shell?.classList.add("is-buffering");
+            }
+          });
+
+          audio.addEventListener("error", () => {
+            shell?.classList.remove("is-buffering");
+            shell?.classList.remove("is-playing");
+            syncPlayerUi();
+          });
+        }
+
+        primaryToggles.forEach((button) => {
+          button.addEventListener("click", async (event) => {
+            if (!audio || !shell) {
+              return;
+            }
+
+            event.preventDefault();
+
+            if (!audio.src || audio.ended || audio.paused) {
+              await playStream();
+              return;
+            }
+
+            audio.pause();
+          });
+        });
+
+        document.querySelectorAll("[data-load-stream]").forEach((button) => {
+          button.addEventListener("click", async (event) => {
+            if (!audio || !playerSection || !shell) {
+              window.location.href = "/#live-player";
+              return;
+            }
+
+            event.preventDefault();
+            await playStream({ scrollIntoView: true });
+          });
+        });
+
+        document.querySelectorAll("[data-stream-link]").forEach((link) => {
+          link.setAttribute("href", LIVE_STREAM_URL);
+        });
+
+        syncPlayerUi();
+      }
+
+      /* ─── Sticky player ──────────────────────────────────── */
+
+      function setupStickyPlayer() {
+        const stickyPlayer = document.querySelector("[data-sticky-player]");
+        const closeButton = document.querySelector("[data-sticky-close]");
+        const dismissedKey = "bytafm-sticky-player-dismissed";
+
+        if (!stickyPlayer) {
+          return;
+        }
+
+        let dismissed = false;
+
+        try {
+          dismissed = window.localStorage.getItem(dismissedKey) === "true";
+        } catch (error) {
+          dismissed = false;
+        }
+
+        if (dismissed) {
+          stickyPlayer.hidden = true;
+          document.body.classList.remove("has-sticky-player");
+          return;
+        }
+
+        document.body.classList.add("has-sticky-player");
+
+        let scrollTimer = 0;
+
+        const showPlayer = () => {
+          stickyPlayer.classList.remove("is-scroll-hidden");
+        };
+
+        const handleScroll = () => {
+          stickyPlayer.classList.add("is-scroll-hidden");
+          window.clearTimeout(scrollTimer);
+          scrollTimer = window.setTimeout(showPlayer, 180);
+        };
+
+        window.addEventListener("scroll", handleScroll, { passive: true });
+
+        closeButton?.addEventListener("click", () => {
+          stickyPlayer.classList.add("is-dismissed");
+          stickyPlayer.classList.remove("is-scroll-hidden");
+          window.removeEventListener("scroll", handleScroll);
+          window.clearTimeout(scrollTimer);
+
+          try {
+            window.localStorage.setItem(dismissedKey, "true");
+          } catch (error) {
+            // Ignore storage errors and still hide the pill for this page view.
+          }
+
+          document.body.classList.remove("has-sticky-player");
+
+          window.setTimeout(() => {
+            stickyPlayer.hidden = true;
+          }, 220);
+        });
+      }
+
+      /* ─── Utilities ──────────────────────────────────────── */
+
+      function capitalize(value) {
+        return value.charAt(0).toUpperCase() + value.slice(1);
+      }
+
+      /* ─── Boot ───────────────────────────────────────────── */
+
+      if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", init, { once: true });
+      } else {
+        init();
+      }
+    </script>
+  </body>
+</html>

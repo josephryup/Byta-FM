@@ -1,0 +1,204 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { stationInfo } from "../data/site";
+
+const organizationSchema = {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  name: stationInfo.name,
+  url: new URL("/", Astro.url).href,
+  logo: new URL("/assets/logo.webp", Astro.url).href,
+  telephone: stationInfo.phoneIntl,
+  email: stationInfo.email,
+  address: {
+    "@type": "PostalAddress",
+    streetAddress: "Plot 1199/53, Mwanachingwala Rd",
+    addressLocality: "Choma",
+    addressCountry: "ZM"
+  },
+  contactPoint: [
+    {
+      "@type": "ContactPoint",
+      contactType: "customer service",
+      telephone: stationInfo.phoneIntl,
+      email: stationInfo.email,
+      areaServed: "ZM",
+      availableLanguage: ["en"]
+    }
+  ]
+};
+
+const breadcrumbSchema = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  itemListElement: [
+    {
+      "@type": "ListItem",
+      position: 1,
+      name: "Home",
+      item: new URL("/", Astro.url).href
+    },
+    {
+      "@type": "ListItem",
+      position: 2,
+      name: "Contact",
+      item: Astro.url.href
+    }
+  ]
+};
+---
+
+<BaseLayout
+  title="Contact Byta FM | Studio Number, WhatsApp, Email, and Advertising"
+  description="Contact Byta FM in Choma for studio requests, dedications, WhatsApp messages, advertising, outside broadcasts, and community announcements. Find the Byta FM phone number, email, and location."
+  activePath="/contact"
+  bodyClass="light-site"
+  structuredData={[organizationSchema, breadcrumbSchema]}
+>
+  <section class="page-hero">
+    <div class="container page-shell">
+      <div class="page-copy">
+        <div class="eyebrow">
+          <span class="pulse-dot"></span>
+          Contact the studio
+        </div>
+        <h1 class="page-title">Contact Byta FM for requests, advertising, and community <span>announcements</span>.</h1>
+        <p>
+          Use this page to reach the station for dedications, shout-outs, programme feedback,
+          advertising enquiries, sponsored shows, outside broadcasts, public notices, and story
+          leads. The goal is simple: make Byta FM easy to reach whether you are a listener, a
+          business, or a community organisation.
+        </p>
+      </div>
+      <aside class="page-aside page-meta">
+        <strong>Most useful contact routes</strong>
+        <div class="meta-list">
+          <div>
+            <span>Live participation</span>
+            <strong>Phone calls and WhatsApp-style requests are the fastest way to reach the studio during live shows.</strong>
+          </div>
+          <div>
+            <span>Business inquiries</span>
+            <strong>Advertising, sponsored programmes, and outside broadcasts should come through the station contact details below.</strong>
+          </div>
+          <div>
+            <span>Station trust</span>
+            <strong>Location, phone number, frequencies, and email stay visible for quick verification.</strong>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <section class="section section-tight">
+    <div class="container">
+      <div class="card-grid grid-four">
+        <article class="contact-card">
+          <div class="contact-icon">01</div>
+          <strong>Location</strong>
+          <span>{stationInfo.address}</span>
+          <p>The main station contact point for on-air enquiries, office visits, and business communication.</p>
+        </article>
+        <article class="contact-card">
+          <div class="contact-icon">02</div>
+          <strong>Frequencies</strong>
+          <span>{stationInfo.primaryFrequency} | {stationInfo.secondaryFrequency}</span>
+          <p>Listen in {stationInfo.primaryLocation}, {stationInfo.secondaryLocation}, and nearby communities through the station's FM frequencies.</p>
+        </article>
+        <article class="contact-card">
+          <div class="contact-icon">03</div>
+          <strong>Studio line</strong>
+          <span>{stationInfo.phoneDisplay}</span>
+          <p>Use for dedications, call-ins, public announcements, requests, and live audience interaction.</p>
+        </article>
+        <article class="contact-card">
+          <div class="contact-icon">04</div>
+          <strong>Email</strong>
+          <span>{stationInfo.email}</span>
+          <p>Best for advertising, official communication, sponsorship enquiries, and partnership requests.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container contact-layout">
+      <div class="card-grid grid-two">
+        <article class="contact-card">
+          <div class="contact-icon">WA</div>
+          <strong>Listener requests and dedications</strong>
+          <p>Send greetings, birthday messages, song requests, feedback, and short voice-note style messages to the studio during live programmes.</p>
+          <div class="pill-row">
+            <span>Requests</span>
+            <span>Shout-outs</span>
+            <span>Voice notes</span>
+          </div>
+        </article>
+        <article class="contact-card">
+          <div class="contact-icon">PR</div>
+          <strong>Advertising and partnerships</strong>
+          <p>Use Byta FM for radio adverts, sponsored segments, product campaigns, outside broadcasts, and public awareness communication.</p>
+          <div class="pill-row">
+            <span>Sponsorship</span>
+            <span>Events</span>
+            <span>Campaigns</span>
+          </div>
+        </article>
+        <article class="contact-card">
+          <div class="contact-icon">CA</div>
+          <strong>Community announcements</strong>
+          <p>Church notices, local meetings, school information, market activity, and urgent community messages can be shared with the station team.</p>
+        </article>
+        <article class="contact-card">
+          <div class="contact-icon">MS</div>
+          <strong>Music and media submissions</strong>
+          <p>Artists, promoters, and organisers can use the station email to introduce new music, event campaigns, and media partnership opportunities.</p>
+        </article>
+      </div>
+
+      <aside class="contact-panel">
+        <p class="section-kicker">Send a message</p>
+        <h2 class="contact-form-title">A simple contact form for listeners and partners.</h2>
+        <form>
+          <div class="field">
+            <label for="name">Name</label>
+            <input id="name" type="text" placeholder="Your name" />
+          </div>
+          <div class="field">
+            <label for="email">Email</label>
+            <input id="email" type="email" placeholder="you@example.com" />
+          </div>
+          <div class="field">
+            <label for="topic">Message topic</label>
+            <input id="topic" type="text" placeholder="Dedication, advertising, announcement, story tip, or partnership" />
+          </div>
+          <div class="field">
+            <label for="message">Message</label>
+            <textarea id="message" placeholder="Tell the Byta FM team how they can help."></textarea>
+          </div>
+          <button class="button button-primary" type="button">Send message</button>
+        </form>
+        <p class="small-note">
+          Connect this form to email or a lightweight form tool when the station is ready to receive website enquiries directly.
+        </p>
+      </aside>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="listen-banner">
+        <p class="section-kicker">Need to tune in first?</p>
+        <h3>Listen live, then come back to contact the studio.</h3>
+        <p>
+          Many listeners contact the station while a programme is already on air. The live player
+          makes it easy to listen, then send a request or announcement without losing your place.
+        </p>
+        <div class="hero-actions action-row-spaced">
+          <button class="button button-primary" type="button" data-load-stream>Open the live player</button>
+          <a class="button button-secondary" href="/shows">Meet the lineup</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

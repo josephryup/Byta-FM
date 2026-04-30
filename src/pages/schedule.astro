@@ -1,0 +1,101 @@
+---
+import ScheduleBoard from "../components/ScheduleBoard.astro";
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { stationInfo } from "../data/site";
+
+const breadcrumbSchema = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  itemListElement: [
+    {
+      "@type": "ListItem",
+      position: 1,
+      name: "Home",
+      item: new URL("/", Astro.url).href
+    },
+    {
+      "@type": "ListItem",
+      position: 2,
+      name: "Schedule",
+      item: Astro.url.href
+    }
+  ]
+};
+---
+
+<BaseLayout
+  title="Byta FM Schedule Today | 90.3 FM Choma & 100.3 FM Mazabuka"
+  description="Check today's Byta FM schedule and the full weekly programme guide for 90.3 FM Choma and 100.3 FM Mazabuka, including breakfast, agriculture, health, gospel, sports, current affairs, and music."
+  activePath="/schedule"
+  bodyClass="light-site"
+  structuredData={breadcrumbSchema}
+>
+  <section class="page-hero">
+    <div class="container page-shell">
+      <div class="page-copy">
+        <div class="eyebrow">
+          <span class="pulse-dot"></span>
+          Today's programme guide
+        </div>
+        <h1 class="page-title">Today's Byta FM schedule and the full weekly <span>lineup</span>.</h1>
+        <p>
+          Use this page to see what is on now, what comes next, and which programmes air during the
+          week on {stationInfo.primaryFrequency} in {stationInfo.primaryLocation} and {stationInfo.secondaryFrequency}
+          in {stationInfo.secondaryLocation}. The schedule is organised for quick scanning so listeners
+          can move from timing to live listening without confusion.
+        </p>
+      </div>
+      <aside class="page-aside page-meta">
+        <strong>Schedule notes</strong>
+        <div class="meta-list">
+          <div>
+            <span>Time zone</span>
+            <strong>All slots shown in Central Africa Time.</strong>
+          </div>
+          <div>
+            <span>What is included</span>
+            <strong>Breakfast, current affairs, agriculture, health, sports, gospel, talk, and music.</strong>
+          </div>
+          <div>
+            <span>How to use it</span>
+            <strong>Check live airtime, plan your day, or confirm the next programme before you listen.</strong>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <section class="section section-tight">
+    <div class="container">
+      <ScheduleBoard mode="full" />
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="section-head">
+        <div>
+          <p class="section-kicker">How the schedule helps</p>
+          <h2>Built for daily listening, weekend planning, and quick <span>updates</span>.</h2>
+        </div>
+      </div>
+      <div class="card-grid grid-three">
+        <article class="value-card">
+          <div class="contact-icon">01</div>
+          <strong>See what is on now</strong>
+          <p>The live highlight helps listeners quickly identify the programme currently on air before opening the stream.</p>
+        </article>
+        <article class="value-card">
+          <div class="contact-icon">02</div>
+          <strong>Plan weekday listening</strong>
+          <p>Breakfast radio, current affairs, agriculture, health, and afternoon talk stay easy to find during the working week.</p>
+        </article>
+        <article class="value-card">
+          <div class="contact-icon">03</div>
+          <strong>Catch weekend favourites</strong>
+          <p>Gospel, sports, youth conversation, and entertainment slots are separated clearly for family and leisure listening.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

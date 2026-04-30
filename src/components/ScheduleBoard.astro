@@ -1,0 +1,41 @@
+---
+import { dayOrder, shortDays, weeklySchedule, type DayName } from "../data/site";
+
+interface Props {
+  mode: "compact" | "full";
+  defaultDay?: DayName;
+  panelClass?: string;
+}
+
+const { mode, defaultDay = "monday", panelClass = "panel schedule-shell" } = Astro.props;
+const entries = mode === "compact" ? weeklySchedule[defaultDay].slice(0, 5) : weeklySchedule[defaultDay];
+---
+
+<div class={panelClass} data-schedule-root={mode} data-default-day={defaultDay}>
+  <div class="schedule-toolbar">
+    <div class="schedule-tabs" data-schedule-tabs>
+      {
+        dayOrder.map((day) => (
+          <button class:list={["schedule-tab", { "is-active": day === defaultDay }]} type="button" data-day={day}>
+            {shortDays[day]}
+          </button>
+        ))
+      }
+    </div>
+    <div class="schedule-meta" data-schedule-meta>{`${defaultDay.charAt(0).toUpperCase()}${defaultDay.slice(1)} programming | All times CAT`}</div>
+  </div>
+  <div class="schedule-list" data-schedule-list>
+    {
+      entries.map((item) => (
+        <article class="schedule-row">
+          <div class="schedule-time">{item.time}</div>
+          <div class="schedule-show">
+            <strong>{item.title}</strong>
+            <span>{item.note}</span>
+          </div>
+          <div class="schedule-category">{item.category}</div>
+        </article>
+      ))
+    }
+  </div>
+</div>
